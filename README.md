@@ -11,18 +11,18 @@ There's mappings available for normal mode operator and visual mode. *The plugin
 
 Add this to your vimrc
 
-´autocmd VimEnter * call MapMacroRepeatVisualMode("{MAPPING}")´,
+`autocmd VimEnter * call MapMacroRepeatVisualMode("{MAPPING}")`,
 
-where {MAPPING} means the key combination you want to use for the plugin in visual mode. After pressing the mapping you need to press the register (´:h registers´) your macro is stored in, and it will execute inside the selected area.
+where {MAPPING} means the key combination you want to use for the plugin in visual mode. After pressing the mapping you need to press the register (`:h registers`) your macro is stored in, and it will execute inside the selected area.
 
 
 ## Normal mode
 
 Add this to your vimrc
 
-´autocmd VimEnter * call MapMacroRepeatNormalMode("{MAPPING}")´,
+`autocmd VimEnter * call MapMacroRepeatNormalMode("{MAPPING}")`,
 
-where {MAPPING} means the key combination you want to use for the plugin in normal mode. After pressing the mapping you need to press the register (see ´:h registers´) your macro is stored in and then give a motion (text objects work too) that defines the area where macro should be executed in.
+where {MAPPING} means the key combination you want to use for the plugin in normal mode. After pressing the mapping you need to press the register (see `:h registers`) your macro is stored in and then give a motion (text objects work too) that defines the area where macro should be executed in.
 
 
 ## Limitations
