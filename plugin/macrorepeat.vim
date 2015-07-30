@@ -2,6 +2,8 @@
 "
 "Automatically loop macros until they reach the end of the area you've given. The area tries to adapt its size when your macros edit the buffer, ie. ´G´ means the last line of the buffer even if your macro adds or deletes lines.
 "
+""![Sample pic](/../resources/1.gif?raw=true "example animation")
+"
 "There's mappings available for normal mode operator and visual mode. *The plugin maps nothing by default* so you'll have to add a couple of lines to your vimrc.
 "
 "
