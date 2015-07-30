@@ -41,6 +41,11 @@ List of limitations:
 * The above goes for text objects too. Also, with text objects the cursor must not be at the last character of the object when starting. I'd recommend sticking with appropriate movements instead of text objects.
 
 
+## Related plugins
+
+[RangeMacro](http://www.vim.org/scripts/script.php?script_id=3271 "RangeMacro") by Ingo Karkat does mostly the same thing, though it doesn't try to adjust the area when text is edited.
+
+
 ## License
 
 Published under the MIT License.
