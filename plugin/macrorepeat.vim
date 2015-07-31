@@ -4,28 +4,29 @@
 "
 "![Sample pic](/../resources/1.gif?raw=true "example animation")
 "
-"There's mappings available for normal mode operator and visual mode. *The plugin maps nothing by default* so you'll have to add a couple of lines to your vimrc.
+"There's mappings available for normal mode and visual mode. *The plugin maps nothing by default* so you'll have to add a couple of lines to your vimrc.
 "
 "
-"## Visual mode
+"## Mappings
+"
+"### Normal mode
 "
 "Add this to your vimrc
 "
-"`autocmd VimEnter * call MapMacroRepeatVisualMode("{MAPPING}")`,
+"`nmap {MAPPING} <Plug>MacroRepeat`,
+"
+"where `{MAPPING}` means the key combination you want to use for the plugin in normal mode. After pressing the mapping you need to press the register (see `:h registers`) your macro is stored in and then give a motion (text objects work too) that defines the area where macro should be executed in.
+"
+"### Visual mode
+"
+"Add this to your vimrc
+"
+"`xmap {MAPPING} <Plug>MacroRepeat`,
 "
 "where `{MAPPING}` means the key combination you want to use for the plugin in visual mode. After pressing the mapping you need to press the register (`:h registers`) your macro is stored in, and it will execute inside the selected area.
 "
 "
-"## Normal mode
-"
-"Add this to your vimrc
-"
-"`autocmd VimEnter * call MapMacroRepeatNormalMode("{MAPPING}")`,
-"
-"where `{MAPPING}` means the key combination you want to use for the plugin in normal mode. After pressing the mapping you need to press the register (see `:h registers`) your macro is stored in and then give a motion (text objects work too) that defines the area where macro should be executed in.
-"
-"
-"## Limitations
+"## Suitable macros
 "
 "**Important**: This plugin works best with simple macros. Don't expect perfect results with anything too fancy.
 "
@@ -43,7 +44,7 @@
 "
 "## Related plugins
 "
-"[RangeMacro](http://www.vim.org/scripts/script.php?script_id=3271 "RangeMacro") by Ingo Karkat does mostly the same thing, though it doesn't try to adjust the area when text is edited.
+"* [RangeMacro](http://www.vim.org/scripts/script.php?script_id=3271 "RangeMacro") by Ingo Karkat does mostly the same thing, though it doesn't try to adjust the area when text is edited.
 "
 "
 "## License
@@ -51,39 +52,12 @@
 "Published under the MIT License.
 
 
-" Stores the register that's used with the plugin's operator mapping.
-let g:macrorepeat_current_reg = 'q'
-" Stores the cursor position when the plugin's operator mapping is initiated.
-let g:macrorepeat_cursor_pos = [0, 0, 0, 0]
+if exists('g:macrorepeat_loaded')
+	finish
+endif
+let g:macrorepeat_loaded = 1
 
 
-" Map the macrorepeat operator to all registers in normal mode. {mapping}{register}{motion} executes the operation.
-" Important: Has to be called after Vim has finished loading everything. Use ´autocmd VimEnter * ´ in front of the call in vimrc.
-" @mapping: The desired mapping for macrorepeat operator.
-fun! MapMacroRepeatNormalMode(mapping)
-	let registers = "\"*+~-.:1234567890abcdefghijklmnopqrstuvwxyz"
-	for reg in split(registers, '\zs')
-		exe 'nnoremap <silent> ' . a:mapping . reg . ' :call macrorepeat#SetupMacroRepeatOp("' . reg . '")<cr>:set opfunc=MacroRepeatOp<cr>g@'
-	endfor
-endfun
+nnoremap <silent> <Plug>MacroRepeat :call macrorepeat#MacroRepeatNormal()<cr>
 
-" Map the macrorepeat function to all registers in visual mode. {mapping}{register} executes macrorepeat in visual mode.
-" Important: Has to be called after Vim has finished loading everything. Use ´autocmd VimEnter * ´ in front of the call in vimrc.
-" @mapping: The desired mapping for macrorepeat operator.
-fun! MapMacroRepeatVisualMode(mapping)
-	let registers = "\"*+~-.:1234567890abcdefghijklmnopqrstuvwxyz"
-	for reg in split(registers, '\zs')
-		exe 'xnoremap <silent> ' . a:mapping . reg . ' :<c-u>call macrorepeat#MacroRepeat("char", "<", ">", "' . reg . "\", getpos(\"'<\"))\<cr>"
-	endfor
-endfun
-
-" A helper function used by the macrorepeat operator.
-fun! MacroRepeatOp(type)
-	call macrorepeat#MacroRepeat(a:type, '[', ']', g:macrorepeat_current_reg, g:macrorepeat_cursor_pos)
-endfun
-
-" Setup everything before executing the operator function.
-fun! macrorepeat#SetupMacroRepeatOp(regname)
-	let g:macrorepeat_current_reg = a:regname
-	let g:macrorepeat_cursor_pos = getpos('.')
-endfun
+xnoremap <silent> <Plug>MacroRepeat :<c-u>call macrorepeat#MacroRepeatVisual()<cr>

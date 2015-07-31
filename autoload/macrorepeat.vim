@@ -1,7 +1,64 @@
+" Valid register names.
+let s:regnames = "\"*+~-.:1234567890abcdefghijklmnopqrstuvwxyz"
+" Stores the register that's used with the plugin's operator mapping.
+let s:macro_register = 'q'
+" Stores the cursor position when the plugin's operator mapping is initiated.
+let s:cursor_pos = [0, 0, 0, 0]
+
+
+fun! s:Contains(str, char)
+	for c in split(a:str, '\zs')
+		if c ==# a:char
+			return 1
+		endif
+	endfor
+	return 0
+endfun
+
+fun! s:GetRegName()
+	let input = getchar()
+	if input == 27 || input == 3
+		return
+	endif
+	let char = nr2char(input)
+	if !s:Contains(s:regnames, char)
+		echo 'macrorepeat: Invalid register name!'
+		return ''
+	endif
+	return char
+endfun
+
+" Mapping for normal mode
+fun! macrorepeat#MacroRepeatNormal()
+	let s:cursor_pos = getpos('.')
+	let reg = s:GetRegName()
+	if reg ==# ''
+		return
+	endif
+	let s:macro_register = reg
+	set opfunc=macrorepeat#MacroRepeatOp
+	call feedkeys("g@", 'n')
+endfun
+
+" Mapping for visual mode
+fun! macrorepeat#MacroRepeatVisual()
+	let reg = s:GetRegName()
+	if reg ==# ''
+		return
+	endif
+	call macrorepeat#MacroRepeat('char', '<', '>', reg, getpos("'<"))
+endfun
+
+" A helper function used by the macrorepeat operator.
+fun! macrorepeat#MacroRepeatOp(type)
+	call macrorepeat#MacroRepeat(a:type, '[', ']', s:macro_register, s:cursor_pos)
+endfun
+
 " @type: see :h map-operator
 " @start: the left/upper boundary of the target area
 " @end: the right/lower boundary of the target area
 " @regname: the register whose macro gets executed
+" @cursor_pos: the cursor position when starting the macro
 function! macrorepeat#MacroRepeat(type, start, end, regname, cursor_pos)
 	let start_f = "'".a:start
 	let end_f = "'".a:end

@@ -4,28 +4,29 @@ Automatically loop macros until they reach the end of the area you've given. The
 
 ![Sample pic](/../resources/1.gif?raw=true "example animation")
 
-There's mappings available for normal mode operator and visual mode. *The plugin maps nothing by default* so you'll have to add a couple of lines to your vimrc.
+There's mappings available for normal mode and visual mode. *The plugin maps nothing by default* so you'll have to add a couple of lines to your vimrc.
 
 
-## Visual mode
+## Mappings
+
+### Normal mode
 
 Add this to your vimrc
 
-`autocmd VimEnter * call MapMacroRepeatVisualMode("{MAPPING}")`,
+`nmap {MAPPING} <Plug>MacroRepeat`,
+
+where `{MAPPING}` means the key combination you want to use for the plugin in normal mode. After pressing the mapping you need to press the register (see `:h registers`) your macro is stored in and then give a motion (text objects work too) that defines the area where macro should be executed in.
+
+### Visual mode
+
+Add this to your vimrc
+
+`xmap {MAPPING} <Plug>MacroRepeat`,
 
 where `{MAPPING}` means the key combination you want to use for the plugin in visual mode. After pressing the mapping you need to press the register (`:h registers`) your macro is stored in, and it will execute inside the selected area.
 
 
-## Normal mode
-
-Add this to your vimrc
-
-`autocmd VimEnter * call MapMacroRepeatNormalMode("{MAPPING}")`,
-
-where `{MAPPING}` means the key combination you want to use for the plugin in normal mode. After pressing the mapping you need to press the register (see `:h registers`) your macro is stored in and then give a motion (text objects work too) that defines the area where macro should be executed in.
-
-
-## Limitations
+## Suitable macros
 
 **Important**: This plugin works best with simple macros. Don't expect perfect results with anything too fancy.
 
@@ -43,7 +44,7 @@ List of limitations:
 
 ## Related plugins
 
-[RangeMacro](http://www.vim.org/scripts/script.php?script_id=3271 "RangeMacro") by Ingo Karkat does mostly the same thing, though it doesn't try to adjust the area when text is edited.
+* [RangeMacro](http://www.vim.org/scripts/script.php?script_id=3271 "RangeMacro") by Ingo Karkat does mostly the same thing, though it doesn't try to adjust the area when text is edited.
 
 
 ## License
